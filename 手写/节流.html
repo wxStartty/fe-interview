@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>节流</title>
+</head>
+<body>
+<div><button id="submit">节流点击</button></div>
+<script>
+    function throttle(func, wait = 3000) {
+        let timer = 0
+        return function(...args) {
+            let now = +new Date()
+            console.log('now11', now)
+            console.log('timer11', timer);
+            if (now - timer > wait) {
+                timer = now
+                console.log('now22', now)
+                console.log('timer22', timer)
+                func.apply(this, args)
+            }
+        }
+    }
+
+    setInterval(throttle(() => console.log(111111)), 2000);
+    // submit.onclick = throttle()
+</script>
+</body>
+</html>

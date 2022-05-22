@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<script>
+    [1, 2, 3, 4].reduce((x, y) => console.log(x, y));
+    // 1 2 and undefined 3 and undefined 4
+
+    // reducer 函数接收4个参数:
+    // Accumulator (acc) (累计器)
+    // Current Value (cur) (当前值)
+    // Current Index (idx) (当前索引)
+    // Source Array (src) (源数组)
+    // reducer 函数还有一个可选参数initialValue, 该参数将作为第一次调用回调函数时的第一个参数的值
+    // 如果没有提供initialValue，则将使用数组中的第一个元素。
+
+    // 例子中我们的回调函数没有返回任何值，只是打印累加器的值和当前值。如果函数没有返回值，则默认返回undefined。 
+    const path = `C:\Documents\Projects\table.html`
+    console.log(path);
+    String.raw`C:\Documents\Projects\table.html`
+    console.log(String.raw`C:\Documents\Projects\table.html`);
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<script>
+    function Person(firstName, lastName) {
+        this.firstName = firstName
+        this.lastName = lastName
+    }
+
+    const a = new Person('wang', 'li')
+    const b = Person('xin', 'luoqing')
+    console.log(a)
+    console.log(window.firstName);// 'xin'
+
+    // 当使用 new 时，this 引用我们创建的空对象。当未使用 new 时，this 引用的是全局对象（global object）。
+    // Person('xin', 'luoqing') 相当于定义了 window.firstName = 'xin', window.lastName = 'luoqing'
+    // 而 b 本身是 undefined
+</script>
+</body>
+</html>

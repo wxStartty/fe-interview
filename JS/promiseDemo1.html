@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>promiseDemo1</title>
+  </head>
+  <body>
+    <script>
+      let promiseCount = 1;
+      //完整的实现 测试Demo
+      class Promise {
+        callbacks = [];
+        name = "";
+        state = "pending"; //增加状态
+        value = null; //保存结果
+        constructor(fn) {
+          this.name = `Promse-${promiseCount++}`;
+          console.log("[%s]:constructor", this.name);
+          fn(this._resolve.bind(this));
+        }
+        then(onFulfilled) {
+          console.log("[%s]:then", this.name);
+          return new Promise((resolve) => {
+            this._handle({
+              onFulfilled: onFulfilled || null,
+              resolve: resolve,
+            });
+          });
+        }
+        _handle(callback) {
+          console.log("[%s]:_handle", this.name, "state=", this.state);
+
+          if (this.state === "pending") {
+            this.callbacks.push(callback);
+            console.log(
+              "[%s]:_handle",
+              this.name,
+              "callbacks=",
+              this.callbacks
+            );
+            return;
+          }
+          //如果then中没有传递任何东西
+          if (!callback.onFulfilled) {
+            callback.resolve(this.value);
+            return;
+          }
+          var ret = callback.onFulfilled(this.value);
+          callback.resolve(ret);
+        }
+        _resolve(value) {
+          console.log("[%s]:_resolve", this.name);
+          console.log("[%s]:_resolve", this.name, "value=", value);
+
+          if (
+            value &&
+            (typeof value === "object" || typeof value === "function")
+          ) {
+            var then = value.then;
+            if (typeof then === "function") {
+              then.call(value, this._resolve.bind(this));
+              return;
+            }
+          }
+
+          this.state = "fulfilled"; //改变状态
+          this.value = value; //保存结果
+          this.callbacks.forEach((callback) => this._handle(callback));
+        }
+      }
+
+      /**
+       * 模拟异步请求
+       * @param {*} url
+       * @param {*} s
+       * @param {*} callback
+       */
+      const mockAjax = (url, s, callback) => {
+        setTimeout(() => {
+          callback(url + "异步请求耗时" + s + "秒");
+        }, 1000 * s);
+      };
+
+      new Promise((resolve) => {
+        mockAjax("getUserId", 1, function (result) {
+          resolve(result);
+        });
+      }).then((result) => {
+        console.log(result);
+      });
+      // 结果：
+      // [Promse-1]:constructor
+      // [Promse-1]:then
+      // [Promse-2]:constructor
+      // [Promse-1]:_handle state= pending
+      // [Promse-1]:_handle callbacks= Array(1)
+      // [Promse-1]:_resolve
+      // [Promse-1]:_resolve value= getUserId异步请求耗时1秒
+      // [Promse-1]:_handle state= fulfilled
+      // getUserId异步请求耗时1秒
+      // [Promse-2]:_resolve
+      // [Promse-2]:_resolve value= undefined
+
+      // 通过打印出来的日志，可以看到:
+      // 1.构造 Promise-1 实例，立即执行 mackAjax('getUserId',callback);
+      // 2.调用 Promise-1 的 then 方法，注册 Promise-1 的 onFulfilled 函数。
+      // 3.then 函数内部构造了一个新的 Promise实例：Promise-2。立即执行 Promise-1 的 _handle方法
+      // 4.此时 Promise-1 还是pending的状态
+      // 5.Promise-1._handle 中就把注册在 Promise-1 的 onFulfilled 和 Promise-2 的 resolve 保存在 Promise-1 内部的 callbacks
+      // 6.至此当前线程执行结束。返回的是 Promise-2 的 Promise实例。
+      // 7.1s后，异步请求返回，要改变 Promise-1 的状态和结果，执行 resolve(result)
+      // 8.Promise-1 的值被改变，内容为异步请求返回的结果："getUserId异步请求耗时1s"
+      // 9.Promise-1 的状态变成 fulfilled
+      // 10.Promise-1 的 onFulfilled 被执行，打印出了"getUserId异步请求耗时1秒"
+      // 11.然后再调用 Promise-2.resolve
+      // 12.改变 Promise-2 的值和状态，因为 Promise-1 的 onFulfilled 没有返回值，所以 Promise-2的值为undefined
+
+      // 上例中，如果把异步的请求改成同步会是什么的效果？
+      new Promise((resolve) => {
+        resolve("getUserId同步请求");
+      }).then((result) => {
+        console.log(result);
+      });
+
+      //打印日志
+      // [Promse-1]:constructor
+      // [Promse-1]:_resolve
+      // [Promse-1]:_resolve value= getUserId同步请求
+      // [Promse-1]:then
+      // [Promse-2]:constructor
+      // [Promse-1]:_handle state= fulfilled
+      // getUserId同步请求
+      // [Promse-2]:_resolve
+      // [Promse-2]:_resolve value= undefined
+      // => Promise {
+      //   callbacks: [],
+      //   name: 'Promse-2',
+      //   state: 'fulfilled',
+      //   value: undefined }
+
+      // 感兴趣的可以自己去分析一下。
+    </script>
+  </body>
+</html>

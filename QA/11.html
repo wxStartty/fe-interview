@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<script>
+    function Person(firstName, lastName) {
+        this.firstName = firstName
+        this.lastName = lastName
+    }
+    const member = new Person('wang', 'xin')
+
+    Person.getFullName = function () {
+        return `${this.firstName} ${this.lastName}`
+    }
+    console.log(member.getFullName()); // Uncaught TypeError: member.getFullName is not a function
+
+    // Person.prototype.getFullName = function () {
+    //     return `${this.firstName} ${this.lastName}`
+    // }
+    // console.log(member.getFullName()); // wang xin
+    // 这才会使 member.getFullName() 起作用。为什么这么做有益的？假设我们将这个方法添加到构造函数本身里。
+    // 也许不是每个 Person 实例都需要这个方法。这将浪费大量内存空间，因为它们仍然具有该属性，这将占用每个实例的内存空间。
+    // 相反，如果我们只将它添加到原型中，那么它只存在于内存中的一个位置，但是所有实例都可以访问它！
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <script
+    crossorigin
+    src="https://unpkg.com/react@17/umd/react.production.min.js"
+  ></script>
+  <script
+    crossorigin
+    src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"
+  ></script>
+  <body>
+    <script>
+      function MemoDemo() {
+        let [count, setCount] = useState(0);
+        let [render, setRender] = useState(false);
+        const handleAdd = () => {
+          setCount(count + 1);
+        };
+        // const Childone = () => {
+        //   console.log("子组件一被重新渲染");
+        //   return (
+        //     <div>
+        //       <p>子组件一</p>
+        //       <p>子组件一</p>
+        //     </div>
+        //   );
+        // };
+        // const Childtwo = (props) => {
+        //   return (
+        //     <div>
+        //       <p>子组件二</p>
+        //       <p>count的值为：{props.count}</p>
+        //     </div>
+        //   );
+        // };
+        const handleRender = () => {
+          setRender(true);
+        };
+        return (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              flexDirection: "column",
+            }}
+          >
+            {useMemo(() => {
+              return <Childone />;
+            }, [render])}
+            <Childtwo count={count} />
+            <button onClick={handleAdd}>增加</button>
+            <br />
+            <button onClick={handleRender}>子组件一渲染</button>
+          </div>
+        );
+      }
+    </script>
+  </body>
+</html>

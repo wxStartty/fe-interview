@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>promiseDemo4</title>
+  </head>
+  <body>
+    <script>
+      let promiseCount = 1;
+      //完整的实现 测试Demo
+      class Promise {
+        callbacks = [];
+        name = "";
+        state = "pending"; //增加状态
+        value = null; //保存结果
+        constructor(fn) {
+          this.name = `Promse-${promiseCount++}`;
+          console.log("[%s]:constructor", this.name);
+          fn(this._resolve.bind(this));
+        }
+        then(onFulfilled) {
+          console.log("[%s]:then", this.name);
+          return new Promise((resolve) => {
+            this._handle({
+              onFulfilled: onFulfilled || null,
+              resolve: resolve,
+            });
+          });
+        }
+        _handle(callback) {
+          console.log("[%s]:_handle", this.name, "state=", this.state);
+
+          if (this.state === "pending") {
+            this.callbacks.push(callback);
+            console.log(
+              "[%s]:_handle",
+              this.name,
+              "callbacks=",
+              this.callbacks
+            );
+            return;
+          }
+          //如果then中没有传递任何东西
+          if (!callback.onFulfilled) {
+            callback.resolve(this.value);
+            return;
+          }
+          var ret = callback.onFulfilled(this.value);
+          callback.resolve(ret);
+        }
+        _resolve(value) {
+          console.log("[%s]:_resolve", this.name);
+          console.log("[%s]:_resolve", this.name, "value=", value);
+
+          if (
+            value &&
+            (typeof value === "object" || typeof value === "function")
+          ) {
+            var then = value.then;
+            if (typeof then === "function") {
+              then.call(value, this._resolve.bind(this));
+              return;
+            }
+          }
+
+          this.state = "fulfilled"; //改变状态
+          this.value = value; //保存结果
+          this.callbacks.forEach((callback) => this._handle(callback));
+        }
+      }
+
+      /**
+       * 模拟异步请求
+       * @param {*} url
+       * @param {*} s
+       * @param {*} callback
+       */
+      const mockAjax = (url, s, callback) => {
+        setTimeout(() => {
+          callback(url + "异步请求耗时" + s + "秒");
+        }, 1000 * s);
+      };
+      const pUserId = new Promise((resolve) => {
+        mockAjax("getUserId", 1, function (result) {
+          resolve(result);
+        });
+      });
+      const pUserName = new Promise((resolve) => {
+        mockAjax("getUserName", 2, function (result) {
+          resolve(result);
+        });
+      });
+
+      pUserId
+        .then((id) => {
+          console.log(id);
+          return pUserName;
+        })
+        .then((name) => {
+          console.log(name);
+        });
+
+      // 结果:
+      // [Promse-1]:constructor
+      // [Promse-2]:constructor
+      // [Promse-1]:then
+      // [Promse-3]:constructor
+      // [Promse-1]:_handle state= pending
+      // [Promse-1]:_handle callbacks= [ { onFulfilled: [Function], resolve: [Function] } ]
+      // [Promse-3]:then
+      // [Promse-4]:constructor
+      // [Promse-3]:_handle state= pending
+      // [Promse-3]:_handle callbacks= [ { onFulfilled: [Function], resolve: [Function] } ]
+      // => Promise { callbacks: [], name: 'Promse-4', state: 'pending', value: null }
+      // [Promse-1]:_resolve
+      // [Promse-1]:_resolve value= getUserId异步请求耗时1秒
+      // [Promse-1]:_handle state= fulfilled
+      // getUserId异步请求耗时1秒
+      // [Promse-3]:_resolve
+      // [Promse-3]:_resolve value= Promise { callbacks: [], name: 'Promse-2', state: 'pending', value: null }
+      // [Promse-2]:then
+      // [Promse-5]:constructor
+      // [Promse-2]:_handle state= pending
+      // [Promse-2]:_handle callbacks= [ { onFulfilled: [Function], resolve: [Function] } ]
+      // [Promse-2]:_resolve
+      // [Promse-2]:_resolve value= getUserName异步请求耗时2秒
+      // [Promse-2]:_handle state= fulfilled
+      // [Promse-3]:_resolve
+      // [Promse-3]:_resolve value= getUserName异步请求耗时2秒
+      // [Promse-3]:_handle state= fulfilled
+      // getUserName异步请求耗时2秒
+      // [Promse-4]:_resolve
+      // [Promse-4]:_resolve value= undefined
+      // [Promse-5]:_resolve
+      // [Promse-5]:_resolve value= undefined
+    </script>
+  </body>
+</html>

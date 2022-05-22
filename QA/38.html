@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        (() => {
+            let x, y
+            try {
+                throw new Error()
+            } catch (x) { // x 不是 let x，此时形成块级作用域，所以可以输出 x = 1
+                (x = 1), (y = 2)
+                // x = 1, y = 2 等价上面
+                console.log(x) // 1
+                console.log(y) // 2
+            }
+            console.log(x) // undefined
+            console.log(y) // 2
+        })()
+    </script>
+</body>
+
+</html>

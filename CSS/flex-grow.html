@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        margin: 0;
+    }
+
+    ul,
+    li {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style-type: none;
+    }
+
+    #list {
+        border: 2px solid gold;
+        height: 500px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    #list li {
+        font-family: "microsoft yahei";
+        font-size: 50px;
+        background: #C00;
+        color: #fff;
+        margin: 2px;
+        flex-grow: 1;
+    }
+
+    #list li:nth-child(2) {
+        flex-grow: 2;
+    }
+</style>
+
+<body>
+    <ul id="list">
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</body>
+
+</html>

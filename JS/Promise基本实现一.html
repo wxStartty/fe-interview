@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Promise实现</title>
+  </head>
+  <body>
+    <script>
+      // https://zhuanlan.zhihu.com/p/58428287
+      // 一、基本版本
+      //极简的实现
+      class Promise1 {
+        callbacks = [];
+        constructor(fn) {
+          fn(this._resolve.bind(this));
+        }
+        then(onFulfilled) {
+          this.callbacks.push(onFulfilled);
+        }
+        _resolve(value) {
+          this.callbacks.forEach((fn) => fn(value));
+        }
+      }
+      let p1 = new Promise1((resolve) => {
+        setTimeout(() => {
+          console.log("done");
+          resolve("5秒");
+        }, 5000);
+      }).then((tip) => {
+        console.log("tip", tip); // 5秒
+      });
+      // 结果：
+      // done
+      // 5秒
+      // 上述代码很简单，大致的逻辑是这样的：
+      // 1.调用 then 方法，将想要在 Promise1 异步操作成功时执行的 onFulfilled 放入callbacks队列，其实也就是注册回调函数，可以向观察者模式方向思考；
+      // 2.创建 Promise1 实例时传入的函数会被赋予一个函数类型的参数，即 resolve，它接收一个参数 value，代表异步操作返回的结果，当异步操作执行成功后，
+      // 会调用resolve方法，这时候其实真正执行的操作是将 callbacks 队列中的回调一一执行；
+
+      // 首先 new Promise1 时，传给 Promise1 的函数设置定时器模拟异步的场景，接着调用 Promise1 对象的 then 方法注册异步操作完成后的 onFulfilled，
+      // 最后当异步操作完成时，调用 resolve(value)， 执行 then 方法注册的 onFulfilled。
+
+      // then 方法注册的 onFulfilled 是存在一个数组中，可见 then 方法可以调用多次，注册的多个onFulfilled 会在异步操作完成后根据添加的顺序依次执行。
+
+      //then 的说明
+      let p11 = new Promise1((resolve) => {
+        setTimeout(() => {
+          console.log("done");
+          resolve("5秒");
+        }, 5000);
+      });
+
+      p11.then((tip) => {
+        console.log("then1", tip);
+      });
+
+      p11.then((tip) => {
+        console.log("then2", tip);
+      });
+      // 结果：
+      // then1 5秒
+      // then2 5秒
+
+      // 上例中，要先定义一个变量 p ，然后 p.then 两次。而规范中要求，
+      // then 方法应该能够链式调用。实现也简单，只需要在 then 中 return this 即可。如下所示：
+
+      // 极简的实现 + 链式调用
+      class Promise11 {
+        callbacks = [];
+        constructor(fn) {
+          fn(this._resolve.bind(this));
+        }
+        then(onFulfilled) {
+          this.callbacks.push(onFulfilled);
+          return this; // 看这里
+        }
+        _resolve(value) {
+          this.callbacks.forEach((fn) => fn(value));
+        }
+      }
+
+      let p111 = new Promise11((resolve) => {
+        setTimeout(() => {
+          console.log("done");
+          resolve("5秒");
+        }, 5000);
+      })
+        .then((tip) => {
+          console.log("then1", tip);
+        })
+        .then((tip) => {
+          console.log("then2", tip);
+        });
+
+      // 二、加入延迟机制
+      // 上面 Promise 的实现存在一个问题：如果在 then 方法注册 onFulfilled 之前，resolve 就执行了，
+      // onFulfilled 就不会执行到了。比如上面的例子中我们把 setTimout 去掉。
+
+      //同步执行了resolve
+      let p2 = new Promise11((resolve) => {
+        console.log("同步执行");
+        resolve("同步执行");
+      })
+        .then((tip) => {
+          console.log("then1", tip);
+        })
+        .then((tip) => {
+          console.log("then2", tip);
+        });
+      // 执行结果显示，只有 "同步执行" 被打印了出来，后面的 "then1" 和 "then2" 均没有打印出来。再回去看下 Promise 的源码，
+      // 也很好理解，resolve 执行时，callbacks 还是空数组，还没有onFulfilled 注册上来。
+
+      // 这显然是不允许的，Promises/A+规范明确要求回调需要通过异步方式执行，用以保证一致可靠的执行顺序。因此要加入一些处理，
+      // 保证在 resolve 执行之前，then 方法已经注册完所有的回调：
+
+      //极简的实现+链式调用+延迟机制
+      class Promise2 {
+        callbacks = [];
+        constructor(fn) {
+          fn(this._resolve.bind(this));
+        }
+        then(onFulfilled) {
+          this.callbacks.push(onFulfilled);
+          return this;
+        }
+        _resolve(value) {
+          setTimeout(() => {
+            //看这里
+            this.callbacks.forEach((fn) => fn(value));
+          });
+        }
+      }
+
+      // 在 resolve 中增加定时器，通过 setTimeout 机制，将 resolve 中执行回调的逻辑放置到JS任务队列末尾，
+      // 以保证在 resolve 执行时，then方法的 onFulfilled 已经注册完成。
+
+      // 但是这样依然存在问题，在 resolve 执行后，再通过 then 注册上来的 onFulfilled 都没有机会执行了。如下所示，
+      // 我们加了延迟后，then1 和 then2 可以打印出来了，但下例中的 then3 依然打印不出来。所以我们需要增加状态，
+      // 并且保存 resolve 的值。
+      let p22 = new Promise2((resolve) => {
+        console.log("同步执行");
+        resolve("同步执行");
+      })
+        .then((tip) => {
+          console.log("then1", tip);
+        })
+        .then((tip) => {
+          console.log("then2", tip);
+        });
+
+      setTimeout(() => {
+        p22.then((tip) => {
+          console.log("then3", tip);
+        });
+      });
+
+      // 三、增加状态
+      // 为了解决上一节抛出的问题，我们必须加入状态机制，也就是大家熟知的 pending、fulfilled、rejected。
+      // Promises/A+ 规范中明确规定了，pending 可以转化为 fulfilled 或 rejected 并且只能转化一次，
+      // 也就是说如果 pending 转化到 fulfilled 状态，那么就不能再转化到 rejected。
+      // 并且 fulfilled 和 rejected 状态只能由 pending 转化而来，两者之间不能互相转换。
+
+      // 增加状态后的实现是这样的
+      //极简的实现+链式调用+延迟机制+状态
+      class Promise3 {
+        callbacks = [];
+        state = "pending"; //增加状态
+        value = null; //保存结果
+        constructor(fn) {
+          fn(this._resolve.bind(this));
+        }
+        then(onFulfilled) {
+          if (this.state === "pending") {
+            // 在resolve之前，跟之前逻辑一样，添加到callbacks中
+            this.callbacks.push(onFulfilled);
+          } else {
+            // 在resolve之后，直接执行回调，返回结果了
+            onFulfilled(this.value);
+          }
+          return this;
+        }
+        _resolve(value) {
+          this.state = "fulfilled"; //改变状态
+          this.value = value; //保存结果
+          this.callbacks.forEach((fn) => fn(value));
+        }
+      }
+      // 注意 当增加完状态之后，原先的_resolve中的定时器可以去掉了。当reolve同步执行时，虽然callbacks为空，回调函数还没有注册上来，
+      // 但没有关系，因为后面注册上来时，判断状态为fulfilled，会立即执行回调。
+
+      // 实现源码中只增加了 fulfilled 的状态 和 onFulfilled 的回调，但为了完整性，
+      // 在示意图中增加了 rejected 和 onRejected 。后面章节会实现。
+
+      // resolve 执行时，会将状态设置为 fulfilled ，并把 value 的值存起来，在此之后调用 then 添加的新回调，都会立即执行，直接返回保存的value值。
+
+      // 至此，一个初具功能的Promise就实现好了，它实现了 then，实现了链式调用，实现了状态管理等等。但仔细想想，链式调用的实现只是在 then 中 return 了 this，
+      // 因为是同一个实例，调用再多次 then 也只能返回相同的一个结果，
+      // 这显然是不能满足我们的要求的。下一节，讲述如何实现真正的链式调用。
+    </script>
+  </body>
+</html>

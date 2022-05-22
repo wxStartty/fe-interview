@@ -1,0 +1,141 @@
+1.讲讲JS的数据类型？
+最新的 ECMAScript 标准定义了 8种数据类型:
+    7 种原始类型:
+        Boolean
+        Null
+        Undefined
+        Number
+        BigInt
+        String
+        Symbol
+    和 Object
+
+2.讲讲Map和Set？
+    Map的key相比较普通对象来说更为灵活，普通对象的key只能以基础数据类型作为key值，并且所有传入的key值都会被转化成string类型，而Map的key可以是各种数据类型格式。
+    Set可以讲讲它去重的特性。
+
+3.WeakMap和Map之间的区别？
+    WeakMap只能以复杂数据类型作为key，并且key值是弱引用，对于垃圾回收更加友好。
+
+4.JavaScript深入之从原型到原型链
+    prototype
+    每个函数都有一个 prototype 属性。
+    函数的 prototype 属性指向了一个对象，这个对象正是调用该构造函数而创建的实例的原型
+
+    __proto__
+    这是每一个JavaScript对象(除了 null )都具有的一个属性，叫__proto__，这个属性会指向该对象的原型。
+    person.__proto__ === Person.prototype
+
+    constructor
+    指向实例倒是没有，因为一个构造函数可以生成多个实例，但是原型指向构造函数倒是有的，这就要讲到第三个属性：constructor，每个原型都有一个 constructor 属性指向关联的构造函数。
+    Person === Person.prototype.constructor
+
+    Object.prototype 的原型Object.prototype.__proto__ === null
+
+    补充
+    最后，补充三点大家可能不会注意的地方：
+
+    constructor
+    首先是 constructor 属性，我们看个例子：
+
+    function Person() {
+
+    }
+    var person = new Person();
+    console.log(person.constructor === Person); // true
+    当获取 person.constructor 时，其实 person 中并没有 constructor 属性,当不能读取到constructor 属性时，会从 person 的原型也就是 Person.prototype 中读取，正好原型中有该属性，所以：
+
+    person.constructor === Person.prototype.constructor
+
+5.讲讲this
+    当函数独立调用的时候，在严格模式下它的this指向undefined，在非严格模式下，当this指向undefined的时候，自动指向全局对象(浏览器中就是window)
+
+    全局环境下，this就是指向自己(Window)
+
+    当obj在全局声明的时候，obj内部属性中的this指向全局对象，当obj在一个函数中声明的时候，严格模式下this会指向undefined，非严格模式自动转为指向全局对象。
+
+    作为对象的方法
+    var a = 1;
+    var obj = {
+    a: 2,
+    b: function() {
+        return this.a;
+    }
+    }
+    console.log(obj.b())//2
+    👆b所引用的匿名函数作为obj的一个方法调用，这时候this指向调用它的对象。这里也就是obj。
+    那么如果b方法不作为对象方法调用呢？啥意思呢，就是这样👇：
+    var a = 1;
+    var obj = {
+    a: 2,
+    b: function() {
+        return this.a;
+    }
+    }
+    var t = obj.b;
+    console.log(t());//1复制代码如上，t函数执行结果竟然是全局变量1，为啥呢？这就涉及Javascript的内存空间了，就是说，obj对象的b属性存储的是对该匿名函数的一个引用，可以理解为一个指针。当赋值给t的时候，并没有单独开辟内存空间存储新的函数，而是让t存储了一个指针，该指针指向这个函数。相当于执行了这么一段伪代码：
+    var a = 1;
+    function fun() {//此函数存储在堆中
+        return this.a;
+    }
+    var obj = {
+    a: 2,
+    b: fun //b指向fun函数
+    }
+    var t = fun;//变量t指向fun函数
+    console.log(t());//1复制代码此时的t就是一个指向fun函数的指针，调用t，相当于直接调用fun，套用以上规则，打印出来1自然很好理解了。
+
+    箭头函数
+    箭头函数会捕获其所在上下文的 this 值，作为自己的 this 值
+
+6.浅拷贝和深拷贝的区别
+    浅拷贝：一般指的是把对象的第一层拷贝到一个新对象上去，比如
+    var a = { count: 1, deep: { count: 2 } }
+    var b = Object.assign({}, a)
+    // 或者
+    var b = {...a}
+    深拷贝：一般需要借助递归实现，如果对象的值还是个对象，要进一步的深入拷贝，完全替换掉每一个复杂类型的引用
+    var deepCopy = (obj) => {
+        var ret = {}
+        for (var key in obj) {
+            var value = obj[key]
+            ret[key] = typeof value === 'object' ? deepCopy(value) : value
+        }
+        return ret
+    }
+
+7.讲讲事件冒泡和事件捕获以及事件代理？
+    鼠标事件
+    属性	描述	DOM
+    onclick	当用户点击某个对象时调用的事件句柄。	2
+    oncontextmenu	在用户点击鼠标右键打开上下文菜单时触发	 
+    ondblclick	当用户双击某个对象时调用的事件句柄。	2
+    onmousedown	鼠标按钮被按下。	2
+    onmouseenter	当鼠标指针移动到元素上时触发。	2
+    onmouseleave	当鼠标指针移出元素时触发	2
+    onmousemove	鼠标被移动。	2
+    onmouseover	鼠标移到某元素之上。	2
+    onmouseout	鼠标从某元素移开。	2
+    onmouseup	鼠标按键被松开。    2
+
+    键盘事件
+    属性	描述	DOM
+    onkeydown	某个键盘按键被按下。	2
+    onkeypress	某个键盘按键被按下并松开。	2
+    onkeyup	某个键盘按键被松开。	2
+
+8.React2019高频面试题
+    2019年17道高频React面试题及详解
+
+9.有没有使用过 React Hooks？
+    常用的有哪些？都有什么作用？
+    如何使用hook在依赖改变的时候重新发送请求？
+    写过自定义hook吗？解决了哪些问题。
+    讲讲React Hooks的闭包陷阱，你是怎么解决的？
+    useEffect 完整指南
+
+10.讲讲React中的组件复用？
+    【React深入】从Mixin到HOC再到Hook
+
+11.webpack的基础知识
+    掘金刘小夕的webpack系列

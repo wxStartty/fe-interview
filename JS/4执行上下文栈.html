@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>执行上下文栈</title>
+  </head>
+  <body>
+    <script>
+      var foo = function () {
+        console.log("foo1");
+      };
+
+      foo(); // foo1
+
+      var foo = function () {
+        console.log("foo2");
+      };
+
+      foo(); // foo2
+
+      function foo2() {
+        console.log("foo2");
+      }
+
+      foo2(); // foo2
+
+      function foo2() {
+        console.log("foo22");
+      }
+
+      foo2(); // foo2
+      // JavaScript 引擎并非一行一行地分析和执行程序，而是一段一段地分析执行。
+      // 当执行一段代码的时候，会进行一个“准备工作”，比如第一个例子中的变量提升，和第二个例子中的函数提升。
+
+      // 1.可执行代码
+      // 可执行代码(executable code)的类型有哪些
+      // 有三种：全局代码、函数代码、eval代码。
+      // 当执行以上三种代码时，就会进入之前所说的“准备工作”，换种专业的说法叫做“执行上下文(execution context)”
+
+      // 2.执行上下文栈
+      // JavaScript 中函数会有很多，执行的函数也有很多，则创建的“执行上下文”也很多，那么如何对“执行上下文”进行管理？
+      // 所以 Javascript 引擎会创建执行上下文栈（Execution context stack，ECS）来管理执行上下文
+      // 为了模拟执行上下文栈的行为，让我们定义执行上下文栈是一个数组：
+      // ECStack = [];
+
+      // 试想当 JavaScript 开始要解释执行代码的时候，最先遇到的就是全局代码，所以初始化的时候首先就会向执行上下文栈压入一个全局执行上下文，
+      // 用 globalContext 表示它
+      // ECStack = [globalContext];
+
+      // ECStack 栈的解析过程，假设有一下代码：
+      // function fun3() {
+      //   console.log("fun3");
+      // }
+
+      // function fun2() {
+      //   fun3();
+      // }
+
+      // function fun1() {
+      //   fun2();
+      // }
+
+      // fun1();
+
+      // 伪代码
+      // fun1()
+      // ECStack.push(<fun1> functionContext);
+
+      // fun1中调用fun2，还要创建fun2的执行上下文
+      // ECStack.push(<fun2> functionContext);
+
+      // fun2还调用了fun3！
+      // ECStack.push(<fun3> functionContext);
+
+      // fun3执行完毕
+      // ECStack.pop();
+
+      // fun2执行完毕
+      // ECStack.pop();
+
+      // fun1执行完毕
+      // ECStack.pop();
+      // javascript接着执行下面的代码，但是ECStack底层永远有个globalContext
+    </script>
+  </body>
+</html>

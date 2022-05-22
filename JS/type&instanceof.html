@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>type&instanceof</title>
+  </head>
+  <body>
+    <script>
+      // https://juejin.cn/post/6844903613584654344
+      // 一、typeof 实现原理
+      // typeof 一般被用于判断一个变量的类型，用于判断除了 object 的其它类型（number, string, boolean, function, undefined, symbol）时使用的比较多，
+      // 可判断 object 类型则只能知道是 'object'。
+      let s = new String("abc");
+      console.log(typeof s === "object"); // true
+      console.log(s instanceof String); // true
+
+      // js 在底层存储变量的时候，会在变量的机器码的低位1-3位存储其类型信息.
+      // 000：对象
+      // 010：浮点数
+      // 100：字符串
+      // 110：布尔
+      // 1：整数
+      // 但是，对于 undefined 和 null 来说，这两个值的信息存储是有点特殊的。
+      // null：所有机器码均为0
+      // undefined：用 −2^30 整数来表示
+      // 所以，typeof 不能用于判断 null
+      console.log(typeof null); // 'object'
+
+      // 然而用 instanceof 来判断的话
+      // console.log(null instanceof null); // 报错：instanceof&type.html:31 Uncaught TypeError: Right-hand side of 'instanceof' is not an object
+      // null 直接被判断为不是 object，这也是 JavaScript 的历史遗留bug
+
+      //** 因此在用 typeof 来判断变量类型的时候，我们需要注意，最好是用 typeof 来判断基本数据类型（包括symbol），避免对 null 的判断。
+
+      // 还有一个不错的判断类型的方法，就是Object.prototype.toString，我们可以利用这个方法来对一个变量的类型来进行比较准确的判断
+      console.log(Object.prototype.toString.call(1)); // "[object Number]"
+      console.log(Object.prototype.toString.call("hi")); // "[object String]"
+      console.log(Object.prototype.toString.call({ a: "hi" })); // "[object Object]"
+      console.log(Object.prototype.toString.call([1, "a"])); // "[object Array]"
+      console.log(Object.prototype.toString.call(true)); // "[object Boolean]"
+      console.log(Object.prototype.toString.call(() => {})); // "[object Function]"
+      console.log(Object.prototype.toString.call(null)); // "[object Null]"
+      console.log(Object.prototype.toString.call(undefined)); // "[object Undefined]"
+      console.log(Object.prototype.toString.call(Symbol(1))); // "[object Symbol]"
+
+      // 二、intanceof 实现原理
+      // 其实 instanceof 主要的作用就是判断一个实例是否属于某种类型
+      const person = function () {};
+      const wang = new person();
+      console.log(wang instanceof person); // true
+
+      // 当然，instanceof 也可以判断一个实例是否是其父类型或者祖先类型的实例。
+      const person2 = function () {
+        this.name = "wangxin";
+      };
+      const programmer = function () {
+        this.age = "18";
+      };
+      programmer.prototype = new person2();
+      const xin = new programmer();
+      console.log(xin.name); //wangxin
+      console.log(xin instanceof person2); // true
+      console.log(xin instanceof programmer); // true
+
+      // 原理：根据 ECMAScript 语言规范，实现原理如下：
+      function new_instance_of(leftVaule, rightVaule) {
+        let rightProto = rightVaule.prototype; // 取右表达式的 prototype 值
+        leftVaule = leftVaule.__proto__; // 取左表达式的__proto__值
+        while (true) {
+          if (leftVaule === null) {
+            return false;
+          }
+          if (leftVaule === rightProto) {
+            return true;
+          }
+          leftVaule = leftVaule.__proto__;
+        }
+      }
+      // 其实 instanceof 主要的实现原理就是只要右边变量的 prototype 在左边变量的原型链上即可。
+      // 因此，instanceof 在查找的过程中会遍历左边变量的原型链，直到找到右边变量的 prototype,
+      // 如果查找失败，则会返回 false，告诉我们左边变量并非是右边变量的实例。
+
+      // 有趣的示例：
+      function Foo() {}
+      console.log(Object instanceof Object); // true
+      console.log(Function instanceof Function); // true
+      console.log(Function instanceof Object); // true
+      console.log(Foo instanceof Foo); // false
+      console.log(Foo instanceof Object); // true
+      console.log(Foo instanceof Function); // true
+
+      // 总结：
+      // 1.使用 typeof 来判断基本数据类型，注意用 typeof 来判断 null 类型时的问题。
+      // 2.判断一个对象的具体类型可以考虑用 instanceof，但是 instanceof 也可能判断不准确，比如一个数组，他可以被 instanceof 判断为 Object。
+      // 3.比较准确的判断对象实例的类型时，可以采取 Object.prototype.toString.call 方法。
+    </script>
+  </body>
+</html>

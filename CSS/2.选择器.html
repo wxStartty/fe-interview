@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>选择器</title>
+  </head>
+  <style>
+    td,
+    tr {
+      border: 1px solid #333;
+    }
+    section p {
+      color: blue;
+    }
+
+    section > p {
+      background-color: yellow;
+    }
+
+    h2 + p {
+      text-transform: uppercase;
+    }
+
+    h2 ~ p {
+      border: 1px dashed black;
+    }
+  </style>
+  <body>
+    <!-- https://segmentfault.com/a/1190000013424772 -->
+    一、简单选择器
+    <p>1.类型选择器（又名：元素选择器）</p>
+    <p>2.类选择器（Class selectors）</p>
+    <p>3.ID 选择器</p>
+    <p>4.通用选择器（Universal selector）</p>
+    <p>通用选择（*）</p>
+    <p>5.组合器（Combinators）</p>
+    <li>
+      (1)后代选择器——（空格键）——允许您选择嵌套在另一个元素中的某个元素（不一定是直接的后代;例如，它可以是一个孙子）。
+    </li>
+    <li>
+      (2)子选择器—— > ——允许您选择一个元素，该元素是另一个元素的直接子元素。
+    </li>
+    <li>
+      (3)相邻兄弟选择器—— +
+      ——允许您选择一个元素，它是另一个元素的直接兄弟元素(也就是说，在它的旁边，在层次结构的同一层)。
+    </li>
+    <li>
+      (4)通用兄弟选择器—— ~ —
+      —允许您选择其他元素的兄弟元素(例如，在层次结构中的相同级别，但不一定就在它的旁边)。
+    </li>
+    <table>
+      <thead class="table">
+        <tr>
+          <td>Combinators</td>
+          <td>Select</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A,B</td>
+          <td>匹配满足A（和/或）B的任意元素.</td>
+        </tr>
+        <tr>
+          <td>A B</td>
+          <td>
+            匹配任意元素，满足条件：B是A的后代结点（B是A的子节点，或者A的子节点的子节点）
+          </td>
+        </tr>
+        <tr>
+          <td>A > B</td>
+          <td>匹配任意元素，满足条件：B是A的直接子节点</td>
+        </tr>
+        <tr>
+          <td>A + B</td>
+          <td>
+            匹配任意元素，满足条件：B是A的下一个兄弟节点（AB有相同的父结点，并且B紧跟在A的后面）
+          </td>
+        </tr>
+        <tr>
+          <td>A ~ B</td>
+          <td>
+            匹配任意元素，满足条件：B是A之后的兄弟节点中的任意一个（AB有相同的父节点，B在A之后，但不一定是紧挨着A）
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      注：相邻兄弟选择器和通用兄弟选择器只会“向后”选择，DOM结构靠前的兄弟元素不在选择范围内。
+    </p>
+    <p>这里有一个简单的例子来展示这些工作是如何工作的：</p>
+    <section>
+      <h2>Heading 1</h2>
+      <p>Paragraph 1</p>
+      <p>Paragraph 2</p>
+      <div>
+        <h2>Heading 2</h2>
+        <p>Paragraph 3</p>
+        <p>Paragraph 4</p>
+      </div>
+    </section>
+    二、属性选择器
+    <p>1.存在和值（Presence and value）属性选择器</p>
+    <p>这些属性选择器尝试匹配精确的属性值：</p>
+    <li>[attr]：该选择器选择包含 attr 属性的所有元素，不论 attr 的值为何。</li>
+    <li>[attr=val]：该选择器仅选择 attr 属性被赋值为 val 的所有元素。</li>
+    <li>
+      [attr~=val]：该选择器仅选择 attr 属性的值（以空格间隔出多个值）中有包含
+      val 值的所有元素，比如位于被空格分隔的多个类（class）中的一个类。
+    </li>
+    <p>2.子串值（Substring value）属性选择器</p>
+    <p>
+      这种情况的属性选择器也被称为“伪正则选择器”，因为它们提供类似 regular
+      expression 的灵活匹配方式（但请注意，这些选择器并不是真正的正则表达式）：
+    </p>
+    <li>
+      [attr|=val] :
+      选择attr属性的值以val（包括val）或val-开头的元素（-用来处理语言编码）。
+    </li>
+    <li>[attr^=val] : 选择attr属性的值以val开头（包括val）的元素。</li>
+    <li>[attr$=val] : 选择attr属性的值以val结尾（包括val）的元素。</li>
+    <li>[attr*=val] : 选择attr属性的值中包含字符串val的元素。</li>
+    <p>三、伪类和伪元素</p>
+    <p>1.伪类（Pseudo-class）</p>
+    <p>一个 CSS 伪类（pseudo-class） 是一个以冒号(:)作为前缀的关键字</p>
+    <li>:active</li>
+    <li>:any</li>
+    <li>:checked</li>
+    <li>:default</li>
+    <li>:dir()</li>
+    <li>:disabled</li>
+    <li>:empty</li>
+    <li>:enabled</li>
+    <li>:first</li>
+    <li>:first-child</li>
+    <li>:first-of-type</li>
+    <li>:fullscreen</li>
+    <li>:focus</li>
+    <li>:hover</li>
+    <li>:indeterminate</li>
+    <li>:in-range</li>
+    <li>:invalid</li>
+    <li>:lang()</li>
+    <li>:last-child</li>
+    <li>:last-of-type</li>
+    <li>:left</li>
+    <li>:link</li>
+    <li>:not()</li>
+    <li>:nth-child()</li>
+    <li>:nth-last-child()</li>
+    <li>:nth-last-of-type()</li>
+    <li>:nth-of-type()</li>
+    <li>:only-child</li>
+    <li>:only-of-type</li>
+    <li>:optional</li>
+    <li>:out-of-range</li>
+    <li>:read-only</li>
+    <li>:read-write</li>
+    <li>:required</li>
+    <li>:right</li>
+    <li>:root</li>
+    <li>:scope</li>
+    <li>:target</li>
+    <li>:valid</li>
+    <li>:visited</li>
+    <p>2.伪元素（Pseudo-element）</p>
+    <p>
+      伪元素（Pseudo-element）跟伪类很像，但它们又有不同的地方。它们都是关键字
+      —— 但这次伪元素前缀是两个冒号 (::) ——
+      同样是添加到选择器后面达到指定某个元素的某个部分。
+    </p>
+    <li>::after</li>
+    <li>::before</li>
+    <li>::first-letter</li>
+    <li>::first-line</li>
+    <li>::selection</li>
+    <li>::backdrop</li>
+  </body>
+</html>

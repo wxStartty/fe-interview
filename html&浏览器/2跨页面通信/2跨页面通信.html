@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>跨页面通信</title>
+  </head>
+  <body>
+    <script>
+      // https://juejin.cn/post/6844903811232825357
+      // 一、同源页面间的跨页面通信
+
+      // 1. BroadCast Channel
+      // BroadCast Channel 可以帮我们创建一个用于广播的通信频道。
+      // 当所有页面都监听同一频道的消息时，其中某一个页面通过它发送的消息就会被其他所有页面收到。
+      // 下面的方式就可以创建一个标识为wx的频道：
+      const bc = new BroadcastChannel("wx");
+      console.log("bc", bc);
+      // 各个页面可以通过onmessage来监听被广播的消息：
+      bc.onmessage = function (e) {
+        console.log("e", e);
+        const data = e.data;
+        const text = "[receive] " + data.msg + " —— tab " + data.from;
+        console.log("[BroadcastChannel] receive message:", text);
+      };
+      // bc.onmessage({ name: "wx", msg: "BroadcastChannel" });
+      // 要发送消息时只需要调用实例上的postMessage方法即可：
+      bc.postMessage({ name: "wx" });
+      // Broadcast Channel 的具体的使用方式可以看这篇 https://juejin.cn/post/6844903811228663815
+      // 还可以查看同级目录下的index.html和other.html熟悉 Broadcast Channel
+
+      // 2. Service Worker
+      // Service Worker 是一个可以长期运行在后台的 Worker，能够实现与页面的双向通信。
+      // 多页面共享间的 Service Worker 可以共享，将 Service Worker 作为消息的处理中心（中央站）即可实现广播效果。
+      // Service Worker 也是 PWA 中的核心技术之一，由于本文重点不在 PWA ，因此如果想进一步了解 Service Worker，可以阅读文章 https://juejin.cn/post/6844903588691443725
+
+      // 首先，需要在页面注册 Service Worker：
+      /* navigator.serviceWorker.register("./util.sw.js").then(function () {
+                    console.log("Service Worker 注册成功");
+                  });*/
+      // Service Worker 中监听了message事件，获取页面（从 Service Worker 的角度叫 client）发送的信息。
+      // 然后通过self.clients.matchAll()获取当前注册了该 Service Worker 的所有页面，通过调用每个client（即页面）的postMessage方法，向页面发送消息。
+      // 这样就把从一处（某个Tab页面）收到的消息通知给了其他页面。
+
+      // 处理完 Service Worker，我们需要在页面监听 Service Worker 发送来的消息：
+      /* navigator.serviceWorker.addEventListener("message", function (e) {
+                    const data = e.data;
+                    const text = "[receive] " + data.msg + " —— tab " + data.from;
+                    console.log("[Service Worker] receive message:", text);
+                  }); */
+
+      // 最后，当需要同步消息时，可以调用 Service Worker 的postMessage方法：
+      // navigator.serviceWorker.controller.postMessage(mydata);
+
+      // 3. LocalStorage
+      // LocalStorage 作为前端最常用的本地存储，大家应该已经非常熟悉了；但StorageEvent这个与它相关的事件有些同学可能会比较陌生。
+      // 当 LocalStorage 变化时，会触发storage事件。(当前页面使用的storage被其他页面修改时会触发StorageEvent事件. )
+      // 利用这个特性，我们可以在发送消息时，把消息写入到某个 LocalStorage 中；然后在各个页面内，通过监听storage事件即可收到通知。
+      function setLocalStorageTime() {
+        localStorage.setItem("time", +new Date());
+      }
+      window.addEventListener("storage", function (e) {
+        console.log("storage");
+        if (e.key === "time") {
+          // const data = JSON.parse(e.newValue);
+          // const text = "[receive] " + data.msg + " —— tab " + data.from;
+          const text =
+            "[receive => newValue] " +
+            e.newValue +
+            "[receive => oldValue] " +
+            e.oldValue;
+          console.log("[Storage I] receive message:", text);
+        }
+      });
+      // 注意，这里有一个细节：
+      // storage事件只有在值真正改变时才会触发。
+      window.localStorage.setItem("test", "123");
+      window.localStorage.setItem("test", "123");
+      // 由于第二次的值'123'与第一次的值相同，所以以上的代码只会在第一次setItem时触发storage事件。
+      // 因此我们通过设置st来保证每次调用时一定会触发storage事件。
+
+      // 下面我们会看到另外两种跨页面通信方式，我把它称为“共享存储+轮询模式”。
+      // 4. Shared Worker
+      // Shared Worker 是 Worker 家族的另一个成员。普通的 Worker 之间是独立运行、数据互不相通；
+      // 而多个 Tab 注册的 Shared Worker 则可以实现数据共享。
+
+      // Shared Worker 在实现跨页面通信时的问题在于，它无法主动通知所有页面，因此，我们会使用轮询的方式，来拉取最新的数据。思路如下：
+      // 让 Shared Worker 支持两种消息。一种是 post，Shared Worker 收到后会将该数据保存下来；另一种是 get，Shared Worker 收到该消息后会将保存的数据通过postMessage传给注册它的页面。也就是让页面通过 get 来主动获取（同步）最新消息。
+      // 具体实现如下：
+      // 首先，我们会在页面中启动一个 Shared Worker，启动方式非常简单：
+      // 构造函数的第二个参数是 Shared Worker 名称，也可以留空
+      // const sharedWorker = new SharedWorker("./util.shared.js", "ctc");
+
+      // 然后，在该 Shared Worker 中支持 get 与 post 形式的消息：
+      // 见 util.shared.js
+
+      // 之后，页面定时发送 get 指令的消息给 Shared Worker，轮询最新的消息数据，并在页面监听返回信息：
+
+      // 定时轮询，发送 get 指令的消息
+      // setInterval(function () {
+      //   sharedWorker.port.postMessage({ get: true });
+      // }, 1000);
+
+      // 监听 get 消息的返回数据
+      // sharedWorker.port.addEventListener(
+      //   "message",
+      //   (e) => {
+      //     const data = e.data;
+      //     const text = "[receive] " + data.msg + " —— tab " + data.from;
+      //     console.log("[Shared Worker] receive message:", text);
+      //   },
+      //   false
+      // );
+      // sharedWorker.port.start();
+
+      // 最后，当要跨页面通信时，只需给 Shared Worker postMessage即可：
+      // sharedWorker.port.postMessage(mydata);
+
+      // 5. IndexedDB
+      // 除了可以利用 Shared Worker 来共享存储数据，还可以使用其他一些“全局性”（支持跨页面）的存储方案。例如 IndexedDB 或 cookie。
+      // 其思路很简单：与 Shared Worker 方案类似，消息发送方将消息存至 IndexedDB 中；接收方（例如所有页面）则通过轮询去获取最新的信息。
+      // 在这之前，我们先简单封装几个 IndexedDB 的工具方法。
+
+      // (1)打开数据库连接：
+      function openStore() {
+        const storeName = "ctc_wxwxwx";
+        return new Promise(function (resolve, reject) {
+          if (!("indexedDB" in window)) {
+            return reject("don't support indexedDB");
+          }
+          const request = indexedDB.open("CTC_DB", 1);
+          request.onerror = reject;
+          request.onsuccess = (e) => resolve(e.target.result);
+          request.onupgradeneeded = function (e) {
+            const db = e.srcElement.result;
+            if (
+              e.oldVersion === 0 &&
+              !db.objectStoreNames.contains(storeName)
+            ) {
+              const store = db.createObjectStore(storeName, { keyPath: "tag" });
+              store.createIndex(storeName + "Index", "tag", { unique: false });
+            }
+          };
+        });
+      }
+      // (2)存储数据
+      function saveData(db, data) {
+        return new Promise(function (resolve, reject) {
+          const STORE_NAME = "ctc_aleinzhou";
+          const tx = db.transaction(STORE_NAME, "readwrite");
+          const store = tx.objectStore(STORE_NAME);
+          const request = store.put({ tag: "ctc_data", data });
+          request.onsuccess = () => resolve(db);
+          request.onerror = reject;
+        });
+      }
+      // (3)查询/读取数据
+      function query(db) {
+        const STORE_NAME = "ctc_aleinzhou";
+        return new Promise(function (resolve, reject) {
+          try {
+            const tx = db.transaction(STORE_NAME, "readonly");
+            const store = tx.objectStore(STORE_NAME);
+            const dbRequest = store.get("ctc_data");
+            dbRequest.onsuccess = (e) => resolve(e.target.result);
+            dbRequest.onerror = reject;
+          } catch (err) {
+            reject(err);
+          }
+        });
+      }
+      // 剩下的工作就非常简单了。首先打开数据连接，并初始化数据：
+      openStore().then((db) => saveData(db, null));
+      // 对于消息读取，可以在连接与初始化后轮询：
+      openStore()
+        .then((db) => saveData(db, null))
+        .then(function (db) {
+          setInterval(function () {
+            query(db).then(function (res) {
+              if (!res || !res.data) {
+                return;
+              }
+              const data = res.data;
+              const text = "[receive] " + data.msg + " —— tab " + data.from;
+              console.log("[Storage I] receive message:", text);
+            });
+          }, 1000);
+          // 触发 saveData 的方法可以放在用户操作的事件监听内
+          saveData(db, mydata);
+        });
+      // 最后，要发送消息时，只需向 IndexedDB 存储数据即可：
+      // openStore()
+      //   .then((db) => saveData(db, null))
+      //   .then(function (db) {
+      //     // …… 省略上面的轮询代码
+      //     // 触发 saveData 的方法可以放在用户操作的事件监听内
+      //     saveData(db, mydata);
+      //   });
+
+      // 下面，我会再介绍一种通信方式，我把它称为“口口相传”模式。
+      // 6. window.open + window.opener
+      // 7. WebSocket
+    </script>
+    <button onclick="setLocalStorageTime()">
+      改变localStorage.time(不可用，因为不在同一个页面)
+    </button>
+  </body>
+</html>
