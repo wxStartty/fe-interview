@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Css优先级</title>
+  <link rel='stylesheet' href='./styles.css'>
+  <style>
+    #div{
+      width: 200px;
+      height: 200px;
+      background-color: yellow;
+    }
+    div p{color: red};
+    #box{color: blue}
+
+    /* 权重值：201 */
+    #box #box2 p{
+      width: 200px;
+      height: 200px;
+      background-color: red;
+    }
+    /* 权重值：201,离目标最近 */
+    #box #box3 p{
+      width: 200px;
+      height: 200px;
+      background-color: yellow;
+    }
+  </style>
+  <!-- <link rel='stylesheet' href='./styles.css'> -->
+</head>
+<body>
+  一、权重
+  权重决定了你css规则怎样被浏览器解析直到生效。“css权重关系到你的css规则是怎样显示的”。
+  权重记忆口诀：!important(无限大)，一个行内样式+1000，一个id选择器+100，一个属性选择器、class、属性选择器或者伪类+10，一个元素选择器，或者伪元素+1，通配符+0。
+  
+  二、样式重复多写情况
+  在css样式表中，同一个CSS样式你写了两次，后面的会覆盖前面的，在开发中基本不会使用。
+
+  三、不同的权重，权重值高则生效
+
+  四、!important(提升样式优先级)，!important应不用于简写样式(如background-color: red 而不是 background: red)
+  
+  五、行内、内联和外联样式优先级
+    行内 > 内联和外联样式
+    1.外联样式写前面，内联样式写后面(见以上link、style标签)
+      内联样式生效
+    2.内联样式写前面，外联样式写后面(见以上link、style标签)
+      外联样式生效
+    
+    因为css样式是单线程，依次从上向下加载的，这也就证明了内联样式和外联样式的优先级和加载顺序有关。
+
+    总结一下：!important > 行内样式 > 内联样式 and 外联样式
+  
+  六、样式应用于非目标标签时
+  <!-- 选中非目标元素的情况下，离目标越近者优先 -->
+  <div id="box">
+    <p>
+      <span>神来之笔</span>
+    </p>
+  </div>
+  七、权重相等的情况下
+  <!-- 同等权重下,靠近目标的优先 -->
+  <div id="box" class="boxs">
+    <div id="box2" class="boxs2">
+      <div id="box3" class="boxs3">
+        <p></p>
+      </div>
+     </div>
+  </div>
+
+  八、总结
+  1.常用选择器权重优先级：!important > id > class > tag
+  2.!important可以提升样式优先级，但不建议使用。如果!important被用于一个简写的样式属性，那么这条简写的样式属性所代表的子属性都会被应用上!important。 例如：background: blue !important;
+  3.如果两条样式都使用!important，则权重值高的优先级更高
+  4.在css样式表中，同一个CSS样式你写了两次，后面的会覆盖前面的
+  5.样式指向同一元素，权重规则生效，权重大的被应用
+  6.样式指向同一元素，权重规则生效，权重相同时，就近原则生效，后面定义的被应用
+  7.样式不指向同一元素时，权重规则失效，就近原则生效，离目标元素最近的样式被应用
+</body>
+</html>
