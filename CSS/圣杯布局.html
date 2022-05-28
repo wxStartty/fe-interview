@@ -1,82 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>圣杯布局</title>
-</head>
-<style>
+  </head>
+  <style>
+    /* 一 */
     .HolyGrail {
-        display: flex;
-        min-height: 100vh;
-        flex-direction: column;
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
     }
 
     header,
     footer {
-        flex: 1;
+      flex: 1;
     }
 
     .HolyGrail-body {
-        display: flex;
-        flex: 1;
+      display: flex;
+      flex: 1;
     }
 
     .HolyGrail-content {
-        flex: 1;
+      flex: 1;
     }
 
     .HolyGrail-nav,
     .HolyGrail-ads {
-        /* 两个边栏的宽度设为12em */
-        flex: 0 0 12em;
+      /* 两个边栏的宽度设为12em */
+      flex: 0 0 12em;
     }
 
     .HolyGrail-nav {
-        /* 导航放到最左边 */
-        order: -1;
+      /* 导航放到最左边 */
+      order: -1;
     }
     .box1 {
-        height: 100px;
-        background-color: orange;
+      height: 100px;
+      background-color: orange;
     }
     .box2 {
-        height: 100px;
-        background-color: red;
+      height: 100px;
+      background-color: red;
     }
     .box3 {
-        height: 100px;
-        background-color: greenyellow;
+      height: 100px;
+      background-color: greenyellow;
     }
     .box4 {
-        height: 100px;
-        background-color: royalblue;
+      height: 100px;
+      background-color: royalblue;
     }
     .box5 {
-        height: 100px;
-        background-color: burlywood;
+      height: 100px;
+      background-color: burlywood;
     }
-</style>
+  </style>
 
-<body class="HolyGrail">
+  <body class="HolyGrail">
     <header>
-        <div class="box1"></div>
+      <div class="box1"></div>
     </header>
     <div class="HolyGrail-body">
-        <main class="HolyGrail-content">
-            <div class="box2"></div>
-        </main>
-        <nav class="HolyGrail-nav">
-            <div class="box3"></div>
-        </nav>
-        <aside class="HolyGrail-ads">
-            <div class="box4"></div>
-        </aside>
+      <main class="HolyGrail-content">
+        <div class="box2"></div>
+      </main>
+      <nav class="HolyGrail-nav">
+        <div class="box3"></div>
+      </nav>
+      <aside class="HolyGrail-ads">
+        <div class="box4"></div>
+      </aside>
     </div>
     <footer>
-        <div class="box5"></div>
+      <div class="box5"></div>
     </footer>
-</body>
-
+  </body>
 </html>

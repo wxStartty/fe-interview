@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>position</title>
+</head>
+<style>
+  body {
+    margin: 0 auto;
+    height: 1400px;
+    width: 500px;
+  }
+  dt {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    margin: 1em 0;
+  }
+</style>
+<body>
+  <!-- https://developer.mozilla.org/zh-CN/docs/learn/css/css_layout/positioning -->
+  position: static(默认) | relative | absolute | fixed | sticky;
+
+  position: absolute; 定位相对最近父级元素position: relative, 如何没有则相对 html 元素来定位
+
+  z-index 起作用在定位的元素上，未定位 z-index 不起作用
+
+  position: sticky
+  它基本上是相对位置和固定位置的混合体，它允许被定位的元素表现得像相对定位一样，直到它滚动到某个阈值点（例如，从视口顶部起1​​0像素）为止，此后它就变得固定了。
+  <h1>Sticky positioning</h1>
+  <dl>
+    <dt>A</dt>
+    <dd>Apple</dd>
+    <dd>Ant</dd>
+    <dd>Altimeter</dd>
+    <dd>Airplane</dd>
+    <dt>B</dt>
+    <dd>Bird</dd>
+    <dd>Buzzard</dd>
+    <dd>Bee</dd>
+    <dd>Banana</dd>
+    <dd>Beanstalk</dd>
+    <dt>C</dt>
+    <dd>Calculator</dd>
+    <dd>Cane</dd>
+    <dd>Camera</dd>
+    <dd>Camel</dd>
+    <dt>D</dt>
+    <dd>Duck</dd>
+    <dd>Dime</dd>
+    <dd>Dipstick</dd>
+    <dd>Drone</dd>
+    <dt>E</dt>
+    <dd>Egg</dd>
+    <dd>Elephant</dd>
+    <dd>Egret</dd>
+  </dl>
+
+  z-index失效解决思路：
+  1.z-index只作用在使用了定位的元素上，也就是我们经常用的position属性，static除外（如果不是定位元素，那设置z-index是不会起作用的）
+  2.同一个父级元素下的元素层叠效果是受父级影响的，就是说如果你的父级z-index很小，那你子级设置再大也没有用
+
+  几种比较常见的失效情况：
+  1.元素没有设置position属性
+  2.父级元素的z-index比子级元素的z-index小
+
+  解决方案：
+  1.设置position属性（除了static）
+  2.提高父级z-index
+</body>
+</html>

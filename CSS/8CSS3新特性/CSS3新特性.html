@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS3新特性</title>
+  </head>
+  <style>
+    ul,
+    li {
+      margin: 0;
+      padding: 0;
+    }
+    .demo-ul {
+      margin-bottom: 300px;
+    }
+    /* .demo-ul ul {
+      display: flex;
+    } */
+    .demo-ul li {
+      float: left;
+      padding: 0 10px;
+      width: 100px;
+      background: #f90;
+      position: relative;
+      list-style: none;
+    }
+    .demo-ul li a {
+      display: block;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+    }
+    .demo-ul li ul {
+      position: absolute;
+      width: 100%;
+      top: 40px;
+      left: 0;
+      transform: scaleY(0);
+      overflow: hidden;
+    }
+    .ul-transition ul {
+      height: 500px;
+      transform-origin: 0 0;
+      transition: all 0.5s;
+    }
+    .demo-ul li:hover ul {
+      transform: scaleY(1);
+    }
+    .demo-ul li ul li {
+      float: none;
+      background: #0099ff;
+    }
+
+    .background-size {
+      border: 1px dashed black;
+      padding: 35px;
+      background: url("./favicon.ico") no-repeat;
+      /* background-size: contain; */
+      /* background-size: cover; */
+      /* background-size: auto 100%;
+      background-repeat: repeat-x; */
+      background-size: 400px;
+      background-position: center;
+    }
+  </style>
+  <body>
+    https://segmentfault.com/a/1190000010780991
+    <h3>一、过渡</h3>
+    <p>transition： CSS属性，花费时间，效果曲线(默认ease)，延迟时间(默认0)</p>
+    <p>
+      宽度从原始值到制定值的一个过渡，运动曲线ease,运动时间0.5秒，0.2秒后执行过渡
+    </p>
+    <p>transition：width,.5s,ease,.2s</p>
+    <p>所有属性从原始值到制定值的一个过渡，运动曲线ease,运动时间0.5秒</p>
+    <p>transition：all,.5s</p>
+    <p>上面栗子是简写模式，也可以分开写各个属性</p>
+    <p>
+      transition-property: width; transition-duration: 1s;
+      transition-timing-function: linear; transition-delay: 2s;
+    </p>
+    <div class="demo-hover demo-ul t_c">
+      <ul class="fllil">
+        <li>
+          <a href="javascript:;">html</a>
+          <ul>
+            <li><a href="#">div</a></li>
+            <li><a href="#">h1</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="javascript:;">js</a>
+          <ul>
+            <li><a href="#">string</a></li>
+            <li><a href="#">array</a></li>
+            <li><a href="#">object</a></li>
+            <li><a href="#">number</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="javascript:;">css3</a>
+          <ul>
+            <li><a href="#">transition</a></li>
+            <li><a href="#">animation</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="javascript:;">框架</a>
+          <ul>
+            <li><a href="#">vue</a></li>
+            <li><a href="#">react</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="clear"></div>
+    </div>
+    <div class="demo-hover demo-ul ul-transition t_c">
+      <ul class="fllil">
+        <li>
+          <a href="javascript:;">html</a>
+          <ul>
+            <li><a href="#">div</a></li>
+            <li><a href="#">h1</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="javascript:;">js</a>
+          <ul>
+            <li><a href="#">string</a></li>
+            <li><a href="#">array</a></li>
+            <li><a href="#">object</a></li>
+            <li><a href="#">number</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="javascript:;">css3</a>
+          <ul>
+            <li><a href="#">transition</a></li>
+            <li><a href="#">animation</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="javascript:;">框架</a>
+          <ul>
+            <li><a href="#">vue</a></li>
+            <li><a href="#">react</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="clear"></div>
+    </div>
+    <h3>二、动画</h3>
+    <p>
+      animation：动画名称，一个周期花费时间，运动曲线（默认ease），动画延迟（默认0），播放次数（默认1），是否反向播放动画（默认normal），是否暂停动画（默认running）
+    </p>
+    <p>例子一</p>
+    <p>执行一次logo2-line动画，运动时间2秒，运动曲线为 linear</p>
+    <p>animation: logo2-line 2s linear;</p>
+    <p>例子二</p>
+    <p>2秒后开始执行一次logo2-line动画，运动时间2秒，运动曲线为 linear</p>
+    <p>animation: logo2-line 2s linear 2s;</p>
+    <p>例子三</p>
+    <p>
+      无限执行logo2-line动画，每次运动时间2秒，运动曲线为
+      linear，并且执行反向动画
+    </p>
+    <p>animation: logo2-line 2s linear alternate infinite;</p>
+    <p>还有一个重要属性</p>
+    <p>
+      none：不改变默认行为。 forwards
+      ：当动画完成后，保持最后一个属性值（在最后一个关键帧中定义）。
+      backwards：在 animation-delay
+      所指定的一段时间内，在动画显示之前，应用开始属性值（在第一个关键帧中定义）。
+      both：向前和向后填充模式都被应用。
+    </p>
+    <p>
+      例子见
+      <a href="./stackoverflowLogo动画.html">stackoverflowLogo动画</a>
+      <a href="./音乐震动条.html">音乐震动条</a>
+    </p>
+    <h3>三、状态转换</h3>
+    <p>这一部分，分2d转换和3d转换。</p>
+    <p>1.语法</p>
+    <p>transform:适用于2D或3D转换的元素</p>
+    <p>
+      transform-origin：转换元素的位置（围绕那个点进行转换）。默认(x,y,z)：(50%,50%,0)
+    </p>
+
+    <p>transform属性：</p>
+    <p>transform:rotate(30deg);</p>
+    <p>transform:translate(30px,30px);</p>
+    <p>transform:scale(.8);</p>
+    <p>transform: skew(10deg,10deg);</p>
+    <p>transform:rotateX(180deg);</p>
+    <p>transform:rotateY(180deg);</p>
+    <p>transform:rotate3d(10,10,10,90deg);</p>
+    <h3>四、选择器</h3>
+    <p>见 <a href="./css选择器.webp">./css选择器.webp</a></p>
+    <h3>五、阴影</h3>
+    <p>1.语法</p>
+    <p>
+      box-shadow: 水平阴影的位置 垂直阴影的位置 模糊距离 阴影的大小 阴影的颜色
+      阴影开始方向（默认是从里往外，设置inset就是从外往里）;
+    </p>
+    <p><a href="./阴影效果.html">阴影效果</a></p>
+    <h3>六、边框</h3>
+    <p>1.边框图片</p>
+    <p>
+      border-image: 图片url 图像边界向内偏移 图像边界的宽度(默认为边框的宽度)
+      用于指定在边框外部绘制偏移的量（默认0）
+      铺满方式--重复（repeat）、拉伸（stretch）或铺满（round）（默认：拉伸（stretch））;
+    </p>
+    <p><a href="./边框图片.html">边框图片</a></p>
+    <h3>七、背景</h3>
+    <p>1.background-clip 制定背景绘制（显示）区域</p>
+    <p>background-clip: border-box(默认值)</p>
+    <p>
+      background-clip: padding-box
+      从padding开始绘制（显示），不算border,，相当于把border那里的背景给裁剪掉！（background-clip:
+      padding-box;）
+    </p>
+    <p>
+      background-clip: content-box
+      只在内容区绘制（显示），不算padding和border，相当于把padding和border那里的背景给裁剪掉！（background-clip:
+      content-box;）
+    </p>
+    <p>2.background-origin 指定background-position属性应该是相对位置</p>
+    <p>background-origin: border-box(默认值) 背景从边框开始</p>
+    <p>background-origin: padding-box 背景从padding开始</p>
+    <p>background-origin: content-box 背景从边内容开始</p>
+    <p>3.background-size 制定背景的大小</p>
+    <div class="background-size">
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy
+      nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut
+      wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit
+      lobortis nisl ut aliquip ex ea commodo consequat.
+    </div>
+    <p>
+      background-size: contain
+      此时会保持图像的纵横比并将图像缩放成将适合背景定位区域的最大大小
+    </p>
+    <p>
+      background-size: cover
+      此时会保持图像的纵横比并将图像缩放成将完全覆盖背景定位区域的最小大小
+    </p>
+    <p>
+      background-size: auto 100%; background-repeat: repeat-x
+      背景高度自适应，并且背景循环
+    </p>
+    <p>
+      background-size: 400px; background-position: center
+      背景宽度固定400px，高度自适应
+    </p>
+    <p>4.多张背景图</p>
+    <p>
+      background:url('xxx.jpg') no-repeat left,url(yyy.png) no-repeat right;
+    </p>
+  </body>
+</html>
