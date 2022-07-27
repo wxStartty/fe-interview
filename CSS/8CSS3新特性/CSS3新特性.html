@@ -64,6 +64,25 @@
       background-size: 400px;
       background-position: center;
     }
+    /* 下倒影 */
+    .reflect-bottom-p {
+      padding-bottom: 300px;
+    }
+    .reflect-bottom {
+      -webkit-box-reflect: below;
+    }
+
+    /* 右倒影（有偏移） */
+    .reflect-right-translate {
+      -webkit-box-reflect: right 10px;
+    }
+    /* 下倒影（图片遮罩） */
+    .reflect-bottom-img {
+      -webkit-box-reflect: below 0 url(./favicon.ico);
+    }
+    .shadow {
+      text-shadow: 0 0 10px #f00;
+    }
   </style>
   <body>
     https://segmentfault.com/a/1190000010780991
@@ -256,5 +275,289 @@
     <p>
       background:url('xxx.jpg') no-repeat left,url(yyy.png) no-repeat right;
     </p>
+    <h3>八、反射</h3>
+    <p>这个也可以说是倒影</p>
+    <p>
+      1.语法：-webkit-box-reflect:方向[ above-上 | below-下 | right-右 | left-左
+      ]，偏移量，遮罩图片
+    </p>
+    <p>2.下倒影</p>
+    <p>下倒影</p>
+    <p class="reflect-bottom-p">
+      <img src="./favicon.ico" class="reflect-bottom" />
+    </p>
+    <p>右倒影（有偏移）</p>
+    <p>右倒影同时有偏移</p>
+    <p><img src="./favicon.ico" class="reflect-right-translate" /></p>
+    <p>下倒影（渐变）</p>
+    <p class="reflect-bottom-p">
+      <img src="./favicon.ico" class="reflect-bottom-mask" />
+    </p>
+    <p>3.下倒影（图片遮罩）</p>
+    <p class="reflect-bottom-p">
+      <img src="./favicon.ico" class="reflect-bottom-img" />
+    </p>
+    <h3>九、文字</h3>
+    <h4>换行</h4>
+    <p>语法：word-break: normal|break-all|keep-all;</p>
+    <p>默认情况 word-break：normal 使用浏览器默认的换行规则。</p>
+    <p>word-break：keep-all 只能在半角空格或连字符处换行。</p>
+    <p>word-break：break-all 允许在单词内换行。</p>
+
+    <p>语法：word-wrap: normal|break-word;</p>
+    <p>默认情况 word-wrap: normal</p>
+    <p>word-break：break-word 允许在长单词或URL地址内部进行换行</p>
+    <p>word-break：normal 只在允许的断字点换行（浏览器默认处理）</p>
+    <h4>超出省略号</h4>
+    <p>这个其实有三行代码，禁止换行，超出隐藏，超出省略号</p>
+    <style>
+      .ellipsis {
+        width: 200px;
+        border: 1px solid #000000;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    </style>
+    <div class="ellipsis">
+      This is some long text that will not fit in the box
+    </div>
+    <h4>多行超出省略号</h4>
+    <p>
+      超出省略号。这个对于大家来说，不难！但是以前如果是多行超出省略号，就只能用js模拟！现在css3提供了多行省略号的方法！遗憾就是这个暂时只支持webkit浏览器！
+    </p>
+    <style>
+      .multi-ellipsis {
+        width: 400px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        text-overflow: ellipsis;
+        padding: 0 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 30px;
+        height: 60px;
+      }
+    </style>
+    <div class="multi-ellipsis">
+      这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐藏这里将会超出隐
+    </div>
+    <h4>文字阴影</h4>
+    <p>语法：text-shadow:水平阴影，垂直阴影，模糊的距离，以及阴影的颜色。</p>
+    <p class="shadow">栗子：text-shadow: 0 0 10px #f00;</p>
+    <h3>十、颜色</h3>
+    <h4>rgba</h4>
+    <p>一个是rgba（rgb为颜色值，a为透明度）</p>
+    <p>color: rgba(255,00,00,1);</p>
+    <p>background: rgba(00,00,00,.5);</p>
+    <h4>hsla</h4>
+    <p>h:色相”，“s：饱和度”，“l：亮度”，“a：透明度”</p>
+    <p>color: hsla( 112, 72%, 33%, 0.68);</p>
+    <p>background: rgba(00,00,00,.5);</p>
+    <h3>十一、渐变</h3>
+    <p>线性渐变在Mozilla下的应用</p>
+    <p>语法：''</p>
+    <p>
+      参数：其共有三个参数，第一个参数表示线性渐变的方向，top是从上到下、left是从左到右，如果定义成left
+      top，那就是从左上角到右下角。第二个和第三个参数分别是起点颜色和终点颜色。你还可以在它们之间插入更多的参数，表示多种颜色的渐变。
+    </p>
+    <style>
+      .gradient-xxx {
+        width: 150px;
+        height: 80px;
+        background: -moz-linear-gradient(top, #ccc, #000);
+      }
+    </style>
+    <div class="gradient-xxx"></div>
+    <p>线性渐变在Webkit下的应用</p>
+    <p>
+      <!-- -webkit-linear-gradient( [<point> || <angle>,]? <stop>, <stop> [, <stop>]* )//最新发布书写语法
+      -webkit-gradient(<type>, <point> [, <radius>]?, <point> [, <radius>]? [, <stop>]*) //老式语法书写规则 -->
+    </p>
+    <p>
+      参数：-webkit-gradient是webkit引擎对渐变的实现参数，一共有五个。第一个参数表示渐变类型（type），可以是linear（线性渐变）或者radial（径向渐变）。第二个参数和第三个参数，都是一对值，分别表示渐变起点和终点。这对值可以用坐标形式表示，也可以用关键值表示，比如
+      left top（左上角）和left
+      bottom（左下角）。第四个和第五个参数，分别是两个color-stop函数。color-stop函数接受两个参数，第一个表示渐变的位置，0为起点，0.5为中点，1为结束点；第二个表示该点的颜色。
+    </p>
+    <p>
+      老式写法：background: -webkit-gradient(linear,center top,center
+      bottom,from(#ccc), to(#000));
+    </p>
+    <p>新式写法: -webkit-linear-gradient(top,#ccc,#000);</p>
+    <h3>十二、Filter(滤镜)</h3>
+    <p>原图</p>
+    <img src="./favicon.ico" />
+    <p>黑白色filter: grayscale(100%)</p>
+    <img src="./favicon.ico" style="filter: grayscale(100%)" />
+    <p>褐色filter:sepia(1)</p>
+    <img src="./favicon.ico" style="filter: sepia(1)" />
+    <p>饱和度saturate(2)</p>
+    <img src="./favicon.ico" style="filter: saturate(2)" />
+    <p>色相旋转hue-rotate(90deg)</p>
+    <img src="./favicon.ico" style="filter: hue-rotate(90deg)" />
+    <p>反色filter:invert(1)</p>
+    <img src="./favicon.ico" style="filter: invert(1)" />
+    <p>透明度opacity(.5)</p>
+    <img src="./favicon.ico" style="filter: opacity(0.5)" />
+    <p>亮度brightness(.5)</p>
+    <img src="./favicon.ico" style="filter: brightness(0.5)" />
+    <p>对比度contrast(2)</p>
+    <img src="./favicon.ico" style="filter: contrast(2)" />
+    <p>模糊blur(3px)</p>
+    <img src="./favicon.ico" style="filter: blur(3px)" />
+    <p>阴影drop-shadow(5px 5px 5px #000)</p>
+    <img src="./favicon.ico" style="filter: drop-shadow(5px 5px 5px #000)" />
+    <h3>十三、弹性布局</h3>
+    <a href="../5flex/"></a>
+    <h3>十四、栅格布局</h3>
+    <a href="./Grid布局.html">Grid布局</a>
+    <h3>十五、多列布局</h3>
+    <style>
+      .newspaper {
+        column-count: 3;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-rule: 2px solid #000;
+        -webkit-column-rule: 2px solid #000;
+        -mox-column-rule: 2px solid #000;
+      }
+    </style>
+    <div class="newspaper">
+      当我年轻的时候，我梦想改变这个世界；当我成熟以后，我发现我不能够改变这个世界，我将目光缩短了些，决定只改变我的国家；当我进入暮年以后，我发现我不能够改变我们的国家，我的最后愿望仅仅是改变一下我的家庭，但是，这也不可能。当我现在躺在床上，行将就木时，我突然意识到：如果一开始我仅仅去改变我自己，然后，我可能改变我的家庭；在家人的帮助和鼓励下，我可能为国家做一些事情；然后，谁知道呢?我甚至可能改变这个世界。
+    </div>
+    <h3>十六、盒模型定义</h3>
+    <p>box-sizing: border-box | content-box</p>
+    <h3>十七、媒体查询</h3>
+    <style>
+      @media screen and (max-width: 1024px) {
+        body {
+          background-color: darkgoldenrod;
+        }
+      }
+      @media screen and (max-width: 960px) {
+        body {
+          background-color: lightgreen;
+        }
+      }
+    </style>
+    <h3>十八、混合模式</h3>
+    <p>
+      混合模式，就像photoshop里面的混合模式！这一块，我了解过，在项目上没用过，但是我觉得这个应该不会没有用武之地！
+    </p>
+    <p>
+      css3的混合模式，两个（background-blend-mode和mix-blend-mode）。这两个写法和显示效果都非常像！区别就在于background-blend-mode是用于同一个元素的背景图片和背景颜色的。mix-blend-mode用于一个元素的背景图片或者颜色和子元素的。看以下代码，区别就出来了！
+    </p>
+    <h4>background-blend-mode</h4>
+    <style>
+      .hunhemoshi {
+        width: 100px;
+        height: 40px;
+        background: url("./favicon.ico") no-repeat, #09f;
+      }
+    </style>
+    <p>原图</p>
+    <div></div>
+    <p>multiply正片叠底</p>
+    <div class="hunhemoshi" style="background-blend-mode: multiply"></div>
+    <p>screen滤色</p>
+    <div class="hunhemoshi" style="background-blend-mode: screen"></div>
+    <p>overlay叠加</p>
+    <div class="hunhemoshi" style="background-blend-mode: overlay"></div>
+    <p>darken变暗</p>
+    <div class="hunhemoshi" style="background-blend-mode: darken"></div>
+    <p>lighten变亮</p>
+    <div class="hunhemoshi" style="background-blend-mode: lighten"></div>
+    <p>color-dodge颜色减淡模式</p>
+    <div class="hunhemoshi" style="background-blend-mode: color-dodge"></div>
+    <p>color-burn颜色加深</p>
+    <div class="hunhemoshi" style="background-blend-mode: color-burn"></div>
+    <p>hard-light强光</p>
+    <div class="hunhemoshi" style="background-blend-mode: hard-light"></div>
+    <p>soft-light柔光</p>
+    <div class="hunhemoshi" style="background-blend-mode: soft-light"></div>
+    <p>difference差值</p>
+    <div class="hunhemoshi" style="background-blend-mode: difference"></div>
+    <p>exclusion排除</p>
+    <div class="hunhemoshi" style="background-blend-mode: exclusion"></div>
+    <p>hue色相</p>
+    <div class="hunhemoshi" style="background-blend-mode: hue"></div>
+    <p>saturation饱和度</p>
+    <div class="hunhemoshi" style="background-blend-mode: saturation"></div>
+    <p>color颜色</p>
+    <div class="hunhemoshi" style="background-blend-mode: color"></div>
+    <p>luminosity亮度</p>
+    <div class="hunhemoshi" style="background-blend-mode: luminosity"></div>
+    <h4>mix-blend-mode</h4>
+    <style>
+      .hunhemoshi2 {
+        padding: 20px;
+        width: 480px;
+        background: #09f;
+      }
+    </style>
+    <p>原图</p>
+    <div class="hunhemoshi2"><img src="./favicon.ico" /></div>
+    <p>multiply正片叠底</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: multiply" />
+    </div>
+    <p>screen滤色</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: screen" />
+    </div>
+    <p>overlay叠加</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: overlay" />
+    </div>
+    <p>darken变暗</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: darken" />
+    </div>
+    <p>lighten变亮</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: lighten" />
+    </div>
+    <p>color-dodge颜色减淡模式</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: color-dodge" />
+    </div>
+    <p>color-burn颜色加深</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: color-burn" />
+    </div>
+    <p>hard-light强光</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: hard-light" />
+    </div>
+    <p>soft-light柔光</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: soft-light" />
+    </div>
+    <p>difference差值</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: difference" />
+    </div>
+    <p>exclusion排除</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: exclusion" />
+    </div>
+    <p>hue色相</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: hue" />
+    </div>
+    <p>saturation饱和度</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: saturation" />
+    </div>
+    <p>color颜色</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: color" />
+    </div>
+    <p>luminosity亮度</p>
+    <div class="hunhemoshi2">
+      <img src="./favicon.ico" style="mix-blend-mode: luminosity" />
+    </div>
   </body>
 </html>

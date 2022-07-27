@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>浮动</title>
+  </head>
+  <body>
+    <h2>清除浮动的方法</h2>
+    <h3>
+      1.BFC：块级格式化上下文。它是一个独立的渲染区域，只有Block-level box参与，
+      它规定了内部的块级元素如何布局，并且与这个区域外部毫不相干。
+      只要符合以下的条件就是BFC:
+    </h3>
+
+    <p>1) 根元素</p>
+    <p>2) float属性不为none</p>
+    <p>3) position为absolute或fixed</p>
+    <p>
+      4) display为inline-block, table-cell, table-caption, flex, inline-flex
+    </p>
+    <p>5) overflow不为visible</p>
+    <h3>2.伪元素</h3>
+    <style>
+      .clearfix {
+        border: 2px solid black;
+      }
+      .clearfix::after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+      .box1 {
+        float: left;
+        width: 300px;
+        height: 200px;
+        background-color: blue;
+      }
+      .box2 {
+        float: left;
+        width: 300px;
+        height: 200px;
+        background-color: brown;
+      }
+    </style>
+    <div class="clearfix">
+      <div class="box1">box1</div>
+      <div class="box2">box2</div>
+    </div>
+  </body>
+</html>

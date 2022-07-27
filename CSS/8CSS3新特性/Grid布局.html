@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid布局</title>
+  </head>
+  <body>
+    <h3>十四、栅格布局</h3>
+    <a href="https://www.jianshu.com/p/d183265a8dad"></a>
+    <h4>设置在网格容器上的属性</h4>
+    <ul>
+      <li>display: grid | inline-grid | subgrid;</li>
+      <ul>
+        <li>
+          设置行和列的大小，在行轨道或列轨道两边是网格线。grid-template-columns:
+          40px 50px auto 50px 40px;
+        </li>
+        <li>grid-template-rows: 25% 100px auto;</li>
+        <li>
+          track-size: 轨道大小，可以使用css长度，百分比或用分数（用fr单位）。
+        </li>
+        <li>line-name: 网格线名字，你可以选择任何名字。</li>
+      </ul>
+      <li>grid-template-areas</li>
+      <li>grid-column-gap</li>
+      <li>grid-row-gap</li>
+      <li>grid-gap</li>
+      <li>justify-items</li>
+      <li>align-items</li>
+      <li>justify-content</li>
+      <li>align-content</li>
+      <li>grid-auto-columns</li>
+      <li>grid-auto-rows</li>
+      <li>grid-auto-flow</li>
+      <li>grid</li>
+    </ul>
+    <p>
+      注：当元素设置了网格布局，column、float、clear、vertical-align属性无效。
+    </p>
+    <p>1. display: grid | inline-grid | subgrid;</p>
+    <p>
+      2. grid-template-columns grid-template-rows:
+      设置行和列的大小，在行轨道或列轨道两边是网格线。
+    </p>
+    <p>
+      3.grid-template-areas
+      通过获取网格项中的grid-area属性值（名称），来定义网格模版。重复网格区（grid-area）名称将跨越网格单元格，‘.’代表空网格单元。
+    </p>
+    <p>4. grid-column-gap：网格单元间距。</p>
+    <p>5. grid-gap：是grid-column-gap 和 grid-row-gap简写。</p>
+    <p>6. justify-items: start | end | center | stretch（默认） ;</p>
+    <p>7. align-items: start | end | center | stretch ;</p>
+    <p>
+      8. justify-content: start | end | center | stretch | space-around |
+      space-between | space-evenly ;
+    </p>
+    <p>
+      9. align-content: start | end | center | stretch | space-around |
+      space-between | space-evenly ;
+    </p>
+    <p>
+      10. grid-auto-columns grid-auto-rows
+      自动生成隐式网格轨道（列和行），当你定位网格项超出网格容器范围时，将自动创建隐式网格轨道。
+    </p>
+    <p>
+      11. grid-auto-flow : row（默认） | column | dense ;
+      在没有设置网格项的位置时，这个属性控制网格项怎样排列。
+    </p>
+    <p>
+      12. grid: none | grid-template-rows / grid-template-columns |
+      grid-auto-flow [grid-auto-rows [ / grid-auto-columns] ];
+      是一种简写形式，设置网格容器所有属性。
+    </p>
+    <h3>设置在网格项上的属性</h3>
+    <ul>
+      <li>grid-column-start</li>
+      <li>grid-column-end</li>
+      <li>grid-row-start</li>
+      <li>grid-row-end</li>
+      <li>grid-column</li>
+      <li>grid-row</li>
+      <li>grid-area</li>
+      <li>justify-self</li>
+      <li>align-self</li>
+    </ul>
+    <p>
+      1. grid-column-start: number | name | span number | span name | auto ;
+    </p>
+    <p>grid-column-end: number | name | span number | span name | auto ;</p>
+    <p>grid-row-start: number | name | span number | span name | auto ;</p>
+    <p>grid-row-end: number | name | span number | span name | auto ;</p>
+    <p>
+      通过网格线来定义网格项的位置。grid-column-start、grid-row-start定义网格项的开始位置，grid-column-end、grid-row-end定义网格项的结束位置。
+    </p>
+    <p>属性值：</p>
+    <p>line: 指定带编号或者名字的网格线。</p>
+    <p>span number: 跨越轨道的数量。</p>
+    <p>span name: 跨越轨道直到对应名字的网格线。</p>
+    <p>auto: 自动展示位置，默认跨度为1。</p>
+    <p>2. grid-column: start-line / end-line | start-line / span value ;</p>
+    <p>grid-row: start-line / end-line | start-line / span value ;</p>
+    <p>
+      是 grid-column-start、grid-column-end 和 grid-row-start、grid-row-end
+      的简写。
+    </p>
+    <p>
+      3. grid-area: name | row-start / column-start / row-end / column-end ;
+    </p>
+    <p>
+      定义网格项名字，以便创建模块（容器属性grid-template-areas来定义模块）。
+    </p>
+    <p>属性值：</p>
+    <p>name: 项目名子。</p>
+    <p>
+      row-start / column-start / row-end / column-end 可以是数字或网格线名字。
+    </p>
+    <p>4. justify-self: justify-self: start | end | center | stretch;</p>
+    <p>5. align-self: start | end | center | stretch;</p>
+  </body>
+</html>

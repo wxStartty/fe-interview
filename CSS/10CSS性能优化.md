@@ -1,21 +1,8 @@
-一、CSS
+https://blog.csdn.net/weixin_43883485/article/details/103504171
 
-1. 不要大量使用符合样式.
-   如 background: red
-   等价于
-   background-image: initial;
-   background-position-x: initial;
-   background-position-y: initial;
-   background-size: initial;
-   background-repeat-x: initial;
-   background-repeat-y: initial;
-   background-attachment: initial;
-   background-origin: initial;
-   background-clip: initial;
-   background-color: lightblue;
+提高性能的方法有哪些?
 
-   1. 合并 css 文件，如果页面加载 10 个 css 文件,每个文件 1k，那么也要比只加载一个 100k 的 css 文件慢。
-
+1. 合并 css 文件，如果页面加载 10 个 css 文件,每个文件 1k，那么也要比只加载一个 100k 的 css 文件慢。
 2. 减少 css 嵌套，最好不要嵌套三层以上。
 3. 不要在 ID 选择器前面进行嵌套，ID 本来就是唯一的而且权限值大，嵌套完全是浪费性能。
 4. 建立公共样式类，把相同样式提取出来作为公共类使用。
@@ -28,23 +15,14 @@
 11. 善后工作，css 压缩(在线压缩工具 YUI Compressor)
 12. GZIP 压缩，是一种流行的文件压缩算法。
 
-二、JS
+性能优化
 
-1. 使用 CDN 加载.js 文件
-2. 压缩.js 文件大小
-3. JavaScript 文件中没有操作 DOM 相关代码，就可以将该 JavaScript 脚本设置为异步加载，通过 async 或 defer 来标记代码，如：
-   <script async type="text/javascript" src='foo.js'></script>
-   <script defer type="text/javascript" src='foo.js'></script>
-   async 和 defer 虽然都是异步的，不过还有一些差异，使用 async 标志的脚本文件一旦加载完成，会立即执行；而使用了 defer 标记的脚本文件，需要在 DOMContentLoaded 事件之前执行。
-
-三、React
-
-1. 根据情况使用 pureComponent
-
-四、Vue
-
-1. 正确的使用 v-if 和 v-show
-
-五、其它
-
-1. 减少重绘和重排
+1. 避免使用@import，外部的 css 文件中使用@import 会使得页面在加载时增加额外的延迟。
+2. 避免过分重排
+3. repaint（重绘）
+4. CSS 动画
+5. 文件压缩
+6. 去除无用 CSS
+7. 有选择地使用选择器
+8. 减少使用昂贵的属性
+9. 硬件加速的好坏
