@@ -101,3 +101,14 @@ https://juejin.cn/post/6964779204462247950#heading-28
    响应式系统自动实现了依赖收集，进而组件的部分的性能优化由 Vue 内部自己完成，而 React Hook 需要手动传入依赖，而且必须必须保证依赖的顺序，让 useEffect、useMemo 等函数正确的捕获依赖变量，否则会由于依赖不正确使得组件性能下降。
 
    虽然 Compositon API 看起来比 React Hook 好用，但是其设计思想也是借鉴 React Hook 的。
+
+6. watch 属性 key: string|function|Object
+   1. watch 下的函数默认有两个属性 newVal, oldV al
+   2. 如果 newVal oldVal 是对象类型，那么拿到的是代理对象
+   3. 获取原始对象的方式
+      1. { ...newVal }
+      2. Vue.toRaw(newVal)
+   4. (template 会进行深入监听)默认 watch 不会进行深度监听 (info: { name: 'wx' } => this.info.name = 'wxx')
+   5. 进行深度监听(info: { handler(newVal, oldVal) {}, deep: true }), 深度监听 newVal === oldVal
+   6. 第一次渲染执行 immediate: true
+   7. 使用 this.$watch 监听

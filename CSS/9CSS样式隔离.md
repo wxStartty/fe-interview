@@ -85,14 +85,14 @@ https://juejin.cn/post/6844904034281734151#comment
 
 6. CSS In JS
    CSS in JS 其实是一种编写思想，目前已经有超过 40 多种方案的实现，最出名的是 styled-components。
-   mport React from "react";
+   import React from "react";
    import styled from "styled-components";
 
    // 创建一个带样式的 h1 标签
-   const Title = styled.h1` font-size: 1.5em; text-align: center; color: palevioletred; `;
+   const Title = styled.h1`font-size: 1.5em; text-align: center; color: palevioletred;`;
 
    // 创建一个带样式的 section 标签
-   const Wrapper = styled.section` padding: 4em; background: papayawhip; `;
+   const Wrapper = styled.section`padding: 4em; background: papayawhip;`;
 
    // 通过属性动态定义样式
    const Button = styled.button`
@@ -107,7 +107,7 @@ https://juejin.cn/post/6844904034281734151#comment
    `;
 
    // 样式复用
-   const TomatoButton = styled(Button)` color: tomato; border-color: tomato; `;
+   const TomatoButton = styled(Button)`color: tomato; border-color: tomato;`;
 
     <Wrapper>
       <Title>Hello World, this is my first styled component!</Title>

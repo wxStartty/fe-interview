@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <script src="./防抖debounce.js"></script> -->
+    <script src="./防抖debounce.js"></script>
+    <input id="input" type="text" />
+    <button>取消</button>
+    <script>
+      const inp = document.querySelector("input");
+      const btn = document.querySelector("button");
+      let count = 0;
+      const inputChange = function (event) {
+        console.log(`发送了第${++count}次`);
+      };
+      // 防抖
+      // inp.oninput = inputChange;
+      // inp.oninput = debounce(inputChange, 1000, true);
+      const debounceChange = debounce(inputChange, 1000);
+      inp.oninput = () => debounceChange(1, 2, 3, 4, 5);
+
+      // btn.onclick = function () {
+      //   debounceChange.cancel();
+      // };
+
+      // 节流
+      // inp.oninput = throttle(inputChange, 2000);
+    </script>
+  </body>
+</html>
